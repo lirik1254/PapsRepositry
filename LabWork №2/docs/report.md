@@ -6,7 +6,9 @@
 ![Контейнеры](https://github.com/user-attachments/assets/6670f1d2-8f60-4e82-bf86-741a1f284742)
 
 ## Диаграмма компонентов для системы мессенджера
-![контейнер для системы мессенджера drawio](https://github.com/user-attachments/assets/e4db70df-82b6-42f4-b8e9-1066f853ec16)
+![хуй2 drawio](https://github.com/user-attachments/assets/f6e77d69-6ff4-4b02-b722-123f4f86124b)
+
 
 ## Диаграмма компонентов для системы поиска по видео тегам
-![Контейнер для системы поиска по видео_тегам drawio](https://github.com/user-attachments/assets/39b88b53-cc58-4c06-aabe-c09f8d0fcba4)
+![хуй drawio](https://github.com/user-attachments/assets/4134ba76-026e-46f4-8e2c-45eab4cc634f)
+

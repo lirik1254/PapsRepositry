@@ -4,15 +4,14 @@
 ## Диаграмма контейнеров
 ![Контейнеры](https://github.com/user-attachments/assets/6670f1d2-8f60-4e82-bf86-741a1f284742)
 
-## Диаграмма компонентов для системы мессенджера
-![контейнер для системы мессенджера drawio](https://github.com/user-attachments/assets/dfaae98f-e51a-43d0-8fbf-6a9739e617ca)
+## Диаграмма компонентов для системы загрузки видео
+![Контейнер для системы загрузки видео](https://github.com/user-attachments/assets/29faea55-6e2c-41b0-89ab-3b9153626f5b)
 
-## Диаграмма компонентов для системы поиска по видео тегам
-![контейнер для поисковой системы drawio](https://github.com/user-attachments/assets/78ad7db0-2517-4c11-afa1-a3eb5c38512b)
 
 # 2 Построить диаграмму последовательностей для выбранного варианта использования
+![Диаграмма последовательностей](https://github.com/user-attachments/assets/84418f0c-bc61-4512-aa9d-906e11e7ec26)
 
-![2) Диаграмма последовательностей](https://github.com/user-attachments/assets/92d58c67-0bd3-4089-8cc4-a1d4495146c9)
+
 
 # 3 Построить модель БД
 
@@ -161,6 +160,18 @@ class VideoRequest {
 ### YAGNI
 Ненужный код отсутствует, все реализованные методы и классы нужны для выполнения текущей функциональности.
 
+Не вижу смысла уточнять на конкретном примере принцип, который говорит "тебе это не нужно". 
+Вот сравнительная таблица, почему используются те или иные классы 
+
+| **Класс**          | **Обязателен?** | **Обоснование**                                                                  |
+|---------------------|-----------------|-----------------------------------------------------------------------------------|
+| `Video`            | Да              | Представляет сущность видео в базе данных.                                       |
+| `VideoRequest`     | Нет, но полезен | Обеспечивает разделение данных DTO и сущности, улучшает читаемость и расширяемость. |
+| `VideoController`  | Да              | Обрабатывает запросы, связывает сервис и клиент.                                 |
+| `VideoService`     | Нет, но полезен | Упрощает контроллер, выделяет бизнес-логику, делает код гибким.                  |
+| `VideoRepository`  | Да              | Обеспечивает доступ к базе данных.                                               |
+
+
 ### DRY
 Код не содержит дублирования.
 Маппинг между VideoRequest и Video вынесен в метод сервиса, что исключает повторяющийся код.
@@ -181,6 +192,32 @@ Open-Closed (Принцип открытости/закрытости):
 
 Liskov Substitution (Принцип подстановки Барбары Лисков):
 Все интерфейсы и классы могут быть заменены их реализациями без изменения внешнего поведения.
+
+В данный момент VideoRepository реализует интерфейс JpaRepository<Video, Long> предоставляя готовую функциональность для работы с базой данных. 
+Но если мы заменим VideoRepository на другую реализацию интерфейса, допустим CustomVideoRepositor, то код продолжит работать корректно, т.к. CustomVideoRepository соблюдает контракт VideoRepository интерфейса
+
+```
+@Service
+class VideoService {
+
+    private final VideoRepository videoRepository;
+
+    @Autowired
+    public VideoService(CustomVideoRepository customVideoRepository) {
+        this.videoRepository = customVideoRepository;
+    }
+
+    @Transactional
+    public void saveVideo(VideoRequest request) {
+        Video video = new Video(request.getTitle(), request.getDescription(), request.getFileUrl());
+        videoRepository.save(video);
+    }
+
+    public List<Video> getAllVideos() {
+        return videoRepository.findAll();
+    }
+}
+```
 
 Interface Segregation (Принцип разделения интерфейса):
 Интерфейс VideoRepository достаточно узкий и специфичный.
